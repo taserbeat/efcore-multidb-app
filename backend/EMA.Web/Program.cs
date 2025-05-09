@@ -1,6 +1,7 @@
 using System.Reflection;
 using EMA.DB.Contexts;
 using EMA.DB.Repositories;
+using EMA.Web.Workers;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -34,6 +35,9 @@ switch (dbProvider)
     default:
         throw new InvalidOperationException($"Unknown DbProvider: {dbProvider}");
 }
+
+// HostedServiceの登録
+builder.Services.AddHostedService<InitWorker>();
 
 // MVCアプリの設定
 builder.Services.AddControllersWithViews();
