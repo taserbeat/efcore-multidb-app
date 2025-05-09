@@ -52,11 +52,11 @@ dotnet ef migrations add XXXX -c EmaSqlServerContext -p ../EMA.DB/EMA.DB.csproj 
 ## PostgreSQL の場合
 
 ```bash
-dotnet ef database update -c EmaDbContext -p ../EMA.DB/EMA.DB.csproj
+dotnet ef database update -c EmaPostgresContext -p ../EMA.DB/EMA.DB.csproj
 ```
 
 ## SQLServer の場合
 
 ```bash
-
+dotnet ef database update -c EmaSqlServerContext -p ../EMA.DB/EMA.DB.csproj
 ```
