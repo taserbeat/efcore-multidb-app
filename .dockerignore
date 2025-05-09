@@ -1,0 +1,8 @@
+**/node_modules/
+**/obj/
+**/bin/
+.git
+.idea
+.vs
+build
+!build/linux-x64
