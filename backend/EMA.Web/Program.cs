@@ -1,7 +1,33 @@
+using EMA.DB.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// データベース接続設定
+builder.Services.AddDbContext<EmaDbContext>(options =>
+{
+    var dbProvider = builder.Configuration["DbProvider"];
+
+    string? connectionStr = null;
+    switch (dbProvider)
+    {
+        case "PostgreSQL":
+            connectionStr = builder.Configuration.GetConnectionString("PostgreSQL");
+            options.UseNpgsql(connectionStr);
+            break;
+
+        case "SQLServer":
+            connectionStr = builder.Configuration.GetConnectionString("SQLServer");
+            options.UseSqlServer(connectionStr);
+            break;
+
+        default:
+            throw new InvalidOperationException($"Unknown DbProvider: {dbProvider}");
+    }
+});
 
 var app = builder.Build();
 

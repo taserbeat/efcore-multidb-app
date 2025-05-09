@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\EMA.DB\EMA.DB.csproj" />
+    </ItemGroup>
+
 </Project>
