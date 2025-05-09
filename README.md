@@ -10,10 +10,10 @@ Entity Framework Core を使用して複数のデータベースを切り替え�
 docker compose up -d
 ```
 
-### 再起動
+### 終了 & 起動
 
 ```bash
-docker compose down --volumes --remove-orphans　&& docker compose up -d
+docker compose down --volumes --remove-orphans && docker compose up -d
 ```
 
 ### 終了
