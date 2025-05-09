@@ -1,5 +1,6 @@
 using System.Reflection;
 using EMA.DB.Contexts;
+using EMA.DB.Repositories;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -76,6 +77,9 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 })
 .AddSwaggerGenNewtonsoftSupport();
+
+// DIコンテナの設定
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 

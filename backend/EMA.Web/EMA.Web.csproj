@@ -16,6 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EMA.DB\EMA.DB.csproj" />
+        <ProjectReference Include="..\EMA.Services\EMA.Services.csproj" />
     </ItemGroup>
 </Project>
