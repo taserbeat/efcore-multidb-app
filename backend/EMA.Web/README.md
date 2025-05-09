@@ -23,16 +23,40 @@ dotnet tool restore
 
 2. マイグレーションファイルの作成
 
+### PostgreSQL の場合
+
+[appsettings.json](./appsettings.json)の`DbProvider`キーの値を`PostgreSQL`に設定し、以下を実行する。
+
 ```bash
 # 「XXXX」は変更内容がわかるように置き換える
-dotnet ef migrations add XXXX --context EmaDbContext --project ../EMA.DB/EMA.DB.csproj
+dotnet ef migrations add XXXX -c EmaPostgresContext -p ../EMA.DB/EMA.DB.csproj -o Migrations/PostgreSQL
 
 # 例:
-# dotnet ef migrations add CreateUserTable --context EmaDbContext --project ../EMA.DB/EMA.DB.csproj
+# dotnet ef migrations add CreateUserTable -c EmaPostgresContext -p ../EMA.DB/EMA.DB.csproj -o Migrations/PostgreSQL
+```
+
+### SQLServer の場合
+
+[appsettings.json](./appsettings.json)の`DbProvider`キーの値を`SQLServer`に設定し、以下を実行する。
+
+```bash
+# 「XXXX」は変更内容がわかるように置き換える
+dotnet ef migrations add XXXX -c EmaSqlServerContext -p ../EMA.DB/EMA.DB.csproj -o Migrations/SQLServer
+
+# 例:
+# dotnet ef migrations add CreateUserTable -c EmaSqlServerContext -p ../EMA.DB/EMA.DB.csproj -o Migrations/SQLServer
 ```
 
 ## マイグレーションの実行
 
+## PostgreSQL の場合
+
 ```bash
-dotnet ef database update --context EmaDbContext --project ../EMA.DB/EMA.DB.csproj
+dotnet ef database update -c EmaDbContext -p ../EMA.DB/EMA.DB.csproj
+```
+
+## SQLServer の場合
+
+```bash
+
 ```

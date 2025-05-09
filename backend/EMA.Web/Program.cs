@@ -7,27 +7,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // データベース接続設定
-builder.Services.AddDbContext<EmaDbContext>(options =>
+var dbProvider = builder.Configuration["DbProvider"];
+string? connectionStr = null;
+switch (dbProvider)
 {
-    var dbProvider = builder.Configuration["DbProvider"];
-
-    string? connectionStr = null;
-    switch (dbProvider)
-    {
-        case "PostgreSQL":
-            connectionStr = builder.Configuration.GetConnectionString("PostgreSQL");
+    case "PostgreSQL":
+        connectionStr = builder.Configuration.GetConnectionString("PostgreSQL");
+        builder.Services.AddDbContext<EmaDbContextBase, EmaPostgresContext>((options) =>
+        {
             options.UseNpgsql(connectionStr);
-            break;
+        });
+        break;
 
-        case "SQLServer":
-            connectionStr = builder.Configuration.GetConnectionString("SQLServer");
+    case "SQLServer":
+        connectionStr = builder.Configuration.GetConnectionString("SQLServer");
+        builder.Services.AddDbContext<EmaDbContextBase, EmaSqlServerContext>((options) =>
+        {
             options.UseSqlServer(connectionStr);
-            break;
+        });
+        break;
 
-        default:
-            throw new InvalidOperationException($"Unknown DbProvider: {dbProvider}");
-    }
-});
+    default:
+        throw new InvalidOperationException($"Unknown DbProvider: {dbProvider}");
+}
 
 var app = builder.Build();
 

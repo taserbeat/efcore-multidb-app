@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EMA.DB.Contexts
 {
-    public class EmaDbContext : DbContext
+    /// <summary>
+    /// DbContextのベースクラス
+    /// </summary>
+    public abstract class EmaDbContextBase : DbContext
     {
-        public EmaDbContext(DbContextOptions<EmaDbContext> options) : base(options)
+        public EmaDbContextBase(DbContextOptions options) : base(options)
         {
 
         }
