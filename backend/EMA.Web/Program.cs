@@ -1,5 +1,8 @@
+using System.Reflection;
 using EMA.DB.Contexts;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,49 @@ switch (dbProvider)
         throw new InvalidOperationException($"Unknown DbProvider: {dbProvider}");
 }
 
+// MVCアプリの設定
+builder.Services.AddControllersWithViews();
+builder.Services.AddMvc(options =>
+{
+    options.EnableEndpointRouting = false;
+});
+builder.Services.AddControllers().AddNewtonsoftJson();
+
+// Cookieポリシーの設定
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.HttpOnly = HttpOnlyPolicy.Always;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
+// ルーティングの設定
+builder.Services.Configure<RouteOptions>(options =>
+{
+    // ルーティングに小文字を許可する
+    options.LowercaseUrls = true;
+});
+
+// Swaggerの設定
+// https://learn.microsoft.com/ja-jp/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-8.0&tabs=visual-studio-code
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("sample", new OpenApiInfo()
+    {
+        Version = "sample",
+        Title = "efcore-multidb-app",
+        Description = "Entity Framework Core を使用して複数のデータベースを切り替えるサンプル",
+    });
+
+    options.EnableAnnotations();
+
+    // アノテーションコメントをXMLに出力し、Swaggerドキュメントとして反映させる
+    // (.csprojでGenerateDocumentationFileをtrueにする必要がある)
+    var xmlFile = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+})
+.AddSwaggerGenNewtonsoftSupport();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,5 +97,13 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Swaggerのミドルウェアを適用
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/sample/swagger.json", "サンプル");
+    options.DisplayRequestDuration();
+});
 
 app.Run();
